@@ -1,9 +1,6 @@
 Cannibal Problem
 ================
 
-Introduction
-------------
-
 The cannibal problem is the following: imagine you and a group of your
 friends are shipwrecked on a desert island.  Nobody is sure when -- or
 if -- help will arrive.  As your supplies start to dwindle, you realize
@@ -39,25 +36,28 @@ dies.
 Additional Notes
 ----------------
 
-**Food does not spoil.**
+Food does not spoil.
 
-**Remaining food:** If there is not enough food left for everyone to
-eat one whole meal, they all share the remaining food equally
-(and start sharpening their knives, since the next day will
-see another of them butchered and turned into that day's dinner).
+If there is not enough food left for everyone to eat one whole meal,
+they all share the remaining food equally (and start sharpening their
+knives, since the next day will see another of them butchered and turned
+into that day's dinner).
 
-**Starvation:** The last survivor dies when he or she runs out of food.
+The last survivor dies when he or she runs out of food.
 
-Examples
---------
+Example Scenarios
+-----------------
 
-## David and Goliath
+**David and Goliath:**
+
 David and Goliath are shipwrecked, each weighing 130 and 240 pounds,
 respectively. They "vote" each other to be eaten, but Goliath weighs
 more so he wins the vote. Goliath butchers David and survives for an
 additional 130 days.
 
-## Goldilocks gets it easy
+
+**Goldilocks gets it easy**
+
 The three bears from the Goldilocks tale are stranded on the island.
 Papa weighs 350 pounds, Mama weighs 310 pounds, and Baby weighs 180
 pounds. Baby knows that no matter who gets eaten first, he will be
