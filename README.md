@@ -33,6 +33,7 @@ To solve the cannibal problem, you must determine the order in which
 each island inhabitant is eaten and the day that the last survivor
 dies.
 
+
 Additional Notes
 ----------------
 
@@ -44,6 +45,8 @@ knives, since the next day will see another of them butchered and turned
 into that day's dinner).
 
 The last survivor dies when he or she runs out of food.
+
+Weights must all be rounded to the nearest integer.
 
 Example Scenarios
 -----------------
@@ -67,3 +70,18 @@ Baby first, so she also votes to eat Papa. Papa votes to eat Baby
 but is outvoted by 490 pounds to 350. Mama and Baby feast on Papa for
 175 days. Then, Mama eats Baby and survives another 180 days. Total
 survival time: 355 days.
+
+
+Input File Format
+-----------------
+
+The input file will be a passenger manifest, with person's name and
+weight. Each person will be on their own line, with their weight
+listed last on the line. Example:
+
+    Phillip 164
+    Oswald 130
+    Oliver 212
+    Paulina 149
+
+
