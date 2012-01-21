@@ -1,11 +1,13 @@
 
 TGT=cannibal
 
+.phony: target bear clean
 
-all:
+$(TGT):
 	ocamlc cannibal.ml -o $(TGT)
 
-.phony: all clean
+bear: $(TGT)
+	./$(TGT) ../scenarios/threeBears.inp
 
 clean:
 	rm -rf cannibal.cmi cannibal.cmo $(TGT)
