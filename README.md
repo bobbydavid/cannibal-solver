@@ -48,6 +48,15 @@ The last survivor dies when he or she runs out of food.
 
 Weights must all be rounded to the nearest integer.
 
+If a person is faced with the sitation where two candidates are equally
+appealing to him, he will choose the heavier candidate to prolong the
+time until the next death occurs.
+
+If a person is faced with the situation where two candidates are equally
+appealing *and* of equal weight, she will choose alphabetically.
+
+Each player must have a unique name.
+
 Example Scenarios
 -----------------
 
@@ -70,6 +79,44 @@ Baby first, so she also votes to eat Papa. Papa votes to eat Baby
 but is outvoted by 490 pounds to 350. Mama and Baby feast on Papa for
 175 days. Then, Mama eats Baby and survives another 180 days. Total
 survival time: 355 days.
+
+
+Guarantee of a Solution
+-----------------------
+
+For the purposes of a game like the Cannibal Problem involving multiple
+greedy entities, a 'solution' is a set of moves of every player such
+that no player would want to deviate from his or her own moves. For the
+cannibal problem, a solution always exists and is unique.
+
+We can trivially see a unique solution exists for one person (he dies) or
+two people (the bigger one eats the smaller one, or both die in a tie).
+This will be our base case. Now we will use induction.
+
+Assume a unique solution exists for any set of N inhabitants. Now consider
+a group of N + 1 inhabitants. Without loss of generality, let us consider
+the situation from the perspective of only one of the N + 1 players, whom
+we will call Joe.
+
+Joe has N voting choices. Each choice will result in N survivors left on
+the island. From our assumption, this means a unique solution exists as to
+the order people will be eaten. Therefore Joe will be able to calculate
+exactly how many days he will survive in the event that each inhabitant dies.
+Joe will therefore be able to deterministically assign to each other survivor
+a number that represents the number of days Joe will stay alive if that
+person is eaten. As Joe is playing greedily, he will use these numbers
+to decide his favorite person to eat, as well as any pairwise elections.
+
+The same logic applies to every survivor in the set of N + 1 survivors,
+meaning that each pairwise election has a determinate outcome. These
+outcomes can be used to calculate the Smith set, which itself [must exist
+and will be unique][1]. Thus, the N + 1 inhabitants also have a unique
+solution of whom they will eat next.
+
+Inductively, this means that any set of N inhabitants will have a unique
+solution.
+
+[1]: http://en.wikipedia.org/wiki/Smith_set
 
 
 Input File Format
