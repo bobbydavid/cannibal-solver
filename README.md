@@ -37,6 +37,8 @@ dies.
 Additional Notes
 ----------------
 
+No person will ever vote for themselves to be eaten.
+
 Food does not spoil.
 
 If there is not enough food left for everyone to eat one whole meal,
