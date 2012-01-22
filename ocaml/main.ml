@@ -1,5 +1,4 @@
 
-type player = int * string;; (* weight - name *)
 
 let print_usage () =
     print_newline ();
@@ -7,8 +6,7 @@ let print_usage () =
     print_newline ();
     print_endline "  Usage:";
     print_endline (" " ^ Sys.argv.(0) ^ " <input file>");
-    print_newline () ;;
-
+    print_newline ()
 
 let players_of_filename filename =
     let lines_of_filename filename =
@@ -41,20 +39,17 @@ let players_of_filename filename =
         in
         (weight, name) :: players
     in
-    List.fold_left add_player [] lines ;;
+    List.fold_left add_player [] lines
 
 
-let print_player p =
-    let (weight, name) = p in
-        let id_str = "" in (*string_of_int id in*)
-        let weight_str = string_of_int weight in
-        print_endline (id_str ^ ": '" ^ name ^ "' \t" ^ weight_str ^ " lbs") ;;
+let _ =
+    if Array.length Sys.argv != 2 then
+        print_usage ()
+    else
+        let players = players_of_filename Sys.argv.(1) in
+        let result = Solver.solve players in
+        let print_event (day, name) =
+            print_endline ("Day " ^ (string_of_int day) ^ ": " ^ name ^ " dies.")
+        in
+        List.iter print_event result
 
-
-
-
-if Array.length Sys.argv != 2 then
-    print_usage ()
-else
-    let players = players_of_filename Sys.argv.(1) in
-    List.map print_player players; () ;;
