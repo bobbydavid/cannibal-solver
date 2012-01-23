@@ -12,6 +12,8 @@ let n_choose_n n =
 
 (* Return a list of every n-choose-k *)
 let rec get_all_combinations n k =
+    assert (k > 0);
+    assert (n > 0);
     if k = 1 then
         n_choose_1 n
     else if k = n then
