@@ -1,5 +1,4 @@
 
-
 let print_usage () =
     print_newline ();
     print_endline "OCaml Cannibal Program Solver";
