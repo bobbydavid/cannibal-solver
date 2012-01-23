@@ -28,7 +28,6 @@ let players_of_filename filename =
             let weight_str = String.sub line loc (len - loc) in
             let weight =
                 try
-                    print_endline ("Parsing '" ^ weight_str ^ "' in line '" ^ line ^ "'");
                     int_of_string weight_str
                 with Failure(s) -> failwith ("Could not parse integer: '" ^
                 weight_str ^ "' in line '" ^ line ^ "'")
