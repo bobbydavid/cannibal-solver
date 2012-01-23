@@ -1,6 +1,6 @@
 
 TGT=cannibal
-SRC=solver.ml main.ml
+SRC=utils.ml solver.ml main.ml
 
 #############################################
 

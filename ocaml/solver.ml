@@ -16,26 +16,6 @@
 
 open Bigarray
 
-let rec factorial = function
-    | 0 -> 1
-    | n -> n * factorial (n - 1)
-
-let nchoosek n k =
-    (factorial n) / (factorial k * factorial (n - k))
-
-let divide_round_up x y =
-    x / y + (if x mod y = 0 then 0 else 1)
-
-let print_matrix mat =
-    let print_i i = print_string (" " ^ (string_of_int i)) in
-    let print_row r =
-        print_string "[";
-        Array.iter print_i r;
-        print_endline " ]"
-    in
-    Array.iter print_row mat
-
-
 let determine_result cnt players outcomes =
     let next_of_choice prev ch =
         let mask = lnot (1 lsl ch) in
@@ -49,7 +29,7 @@ let determine_result cnt players outcomes =
         | 0 -> [(day, name); ]
         | mouths -> (
             let food = fst players.(winner) in
-            let next_day = day + divide_round_up food mouths in
+            let next_day = day + Utils.divide_round_up food mouths in
             let next_x = next_of_choice x winner in
             (day, name) :: add_choice next_day mouths next_x
         )
