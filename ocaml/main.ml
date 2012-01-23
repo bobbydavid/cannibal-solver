@@ -8,8 +8,9 @@ let print_usage () =
     print_endline (" " ^ Sys.argv.(0) ^ " <input file>");
     print_newline ()
 
+(* Given a filename, return the tuples that represent the players *)
 let players_of_filename filename =
-    let lines_of_filename filename =
+    let lines =
         let lines = ref[] in
         let chan = open_in filename in
         try
@@ -20,36 +21,36 @@ let players_of_filename filename =
             close_in chan;
             List.rev !lines
     in
-    let lines = lines_of_filename filename in
-    let weightname_of_line line =
-        let len = String.length line in
-        let loc = String.rindex line ' ' - 1 in
-        let weight_str = String.sub line (len - loc) loc in
-        let weight = int_of_string weight_str in
-        let name = String.sub line 0 (len - loc - 1) in
-        (weight, name)
-    in
     let add_player players line =
-        let (weight, name) =
-            try
-                weightname_of_line line
-            with Not_found ->
-                raise (Failure("Badly formatted input file on line " ^
-                (string_of_int(List.length players + 1))))
-        in
-        (weight, name) :: players
+        try
+            let len = String.length line in
+            let loc = String.rindex line ' ' + 1 in
+            let weight_str = String.sub line loc (len - loc) in
+            let weight =
+                try
+                    print_endline ("Parsing '" ^ weight_str ^ "' in line '" ^ line ^ "'");
+                    int_of_string weight_str
+                with Failure(s) -> failwith ("Could not parse integer: '" ^
+                weight_str ^ "' in line '" ^ line ^ "'")
+            in
+            let name = String.sub line 0 (loc - 1) in
+            (weight, name) :: players
+        with Not_found ->
+            raise (Failure("Badly formatted input file on line " ^
+            (string_of_int(List.length players + 1))))
     in
     List.fold_left add_player [] lines
 
 
+(* MAIN *)
 let _ =
     if Array.length Sys.argv != 2 then
         print_usage ()
     else
         let players = players_of_filename Sys.argv.(1) in
-        let result = Solver.solve players in
+        let results = Solver.solve players in
         let print_event (day, name) =
             print_endline ("Day " ^ (string_of_int day) ^ ": " ^ name ^ " dies.")
         in
-        List.iter print_event result
+        List.iter print_event results
 
