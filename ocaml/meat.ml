@@ -31,7 +31,7 @@ let update_outcomes players blocks outcomes scenario =
     outcomes.(scenario) <- dummy_choice scenario
 
 let analyze_block players blocks outcomes scenario =
-    (* TODO: Use this block to generate new block rows *)
+    (* XXX: Use this block to generate new block rows *)
     print_endline("Analyzing scenario " ^ (Utils.string_of_comb (Array.length players) scenario))
 
 let rec calc_blocks players blocks outcomes mouths =
