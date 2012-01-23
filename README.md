@@ -141,7 +141,7 @@ Output Format
 The output should appear on the screen showing the order of deaths that
 occur on the island along with the day they occurred. The format should be:
 
-    Day 32: Edoardo dies.
+    Day 1: Edoardo dies.
     Day 76: David dies.
     Day 128: Cory dies.
     Day 233: Bobby dies.
