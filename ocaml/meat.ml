@@ -1,9 +1,6 @@
-
 open Bigarray
 
-
 let initialize_empty_blocks cnt =
-    (* Generate a list of the # of mouths in each scenario *)
     let counts =
         let rec count_mouths = function
             | 0 -> [ 0; ]
@@ -14,7 +11,6 @@ let initialize_empty_blocks cnt =
     let gen_block k =
         Array2.create nativeint c_layout k k
     in
-    (* N mouths -> NxN block *)
     let blocks = List.map gen_block counts in
     Array.of_list blocks
 
@@ -53,7 +49,6 @@ let rec calc_blocks players blocks outcomes mouths =
     let _ = List.map (update_outcomes players blocks outcomes) combins in
     ()
 
-(* Given a list of players, provide the outcomes of every possible scenario *)
 let solve_outcomes players =
     let cnt = Array.length players in
     let blocks = initialize_empty_blocks cnt in
