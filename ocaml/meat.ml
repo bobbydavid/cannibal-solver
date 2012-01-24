@@ -28,7 +28,11 @@ let update_outcomes players blocks outcomes scenario =
 
 let analyze_block players blocks outcomes scenario =
     (* XXX: Use this block to generate new block rows *)
-    print_endline("Analyzing scenario " ^ (Utils.string_of_comb (Array.length players) scenario))
+    let cnt = Array.length players in
+    print_endline("Analyzing block " ^ (Utils.string_of_comb cnt scenario) ^ ":");
+    let ancestors = Combin.ancestors_of_scenario cnt scenario in
+    List.iter print_endline (List.map (Utils.string_of_comb cnt) ancestors)
+
 
 let rec calc_blocks players blocks outcomes mouths =
     let cnt = Array.length players in
