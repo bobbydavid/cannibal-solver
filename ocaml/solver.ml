@@ -20,7 +20,7 @@ let update_scenario scenario victim =
  * build a list of events *)
 let rec add_choices players outcomes mouths day scenario =
     let victim = outcomes.(scenario) in
-    print_endline ((Utils.string_of_comb mouths scenario) ^ ": victim " ^ (string_of_int victim));
+    print_endline ((Utils.string_of_comb (Array.length players) scenario) ^ ": victim " ^ (string_of_int victim));
     let name = snd players.(victim) in
     let mouths = mouths - 1 in
     match mouths with
