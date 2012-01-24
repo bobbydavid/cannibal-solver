@@ -26,12 +26,25 @@ let update_outcomes players blocks outcomes scenario =
     );
     outcomes.(scenario) <- dummy_choice scenario
 
-let analyze_block players blocks outcomes scenario =
+let rec analyze_block_columns players blocks scenario ancestors =
+    let cnt = Array.length players in
+    match ancestors with
+    | hd :: tl ->
+            print_endline("Analyze column for ancestor " ^
+            (string_of_int hd) ^
+            " of scenario " ^
+            (Utils.string_of_comb cnt scenario));
+            analyze_block_columns players blocks scenario tl
+    | [] -> ()
+
+
+
+let analyze_block players blocks scenario =
     (* XXX: Use this block to generate new block rows *)
     let cnt = Array.length players in
     print_endline("Analyzing block " ^ (Utils.string_of_comb cnt scenario) ^ ":");
     let ancestors = Combin.ancestors_of_scenario cnt scenario in
-    List.iter print_endline (List.map (Utils.string_of_comb cnt) ancestors)
+    analyze_block_columns players blocks scenario ancestors
 
 
 let rec calc_blocks players blocks outcomes mouths =
@@ -45,7 +58,7 @@ let rec calc_blocks players blocks outcomes mouths =
         print_endline("Analyzing blocks for " ^ (string_of_int cnt) ^ "-choose-" ^ (string_of_int mouths));
         (* 2. Analyze each of the blocks *)
         let combins = Combin.get_all_combinations cnt mouths in
-        let _ = List.map (analyze_block players blocks outcomes) combins in
+        let _ = List.map (analyze_block players blocks) combins in
         ()
     );
     (* 3. Update the outcomes for each block *)

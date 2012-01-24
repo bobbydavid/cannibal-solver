@@ -30,8 +30,8 @@ let rec get_all_combinations n k =
 
 
 let rec raw_options = function
-    | 1 -> [ 1; ]
-    | n -> (1 lsl (n - 1)) :: raw_options (n - 1)
+    | 1 -> [ 0; ]
+    | n -> (n - 1) :: raw_options (n - 1)
 
 let ancestors_of_scenario n k =
     assert (k < 1 lsl n);
@@ -39,10 +39,10 @@ let ancestors_of_scenario n k =
     let rec cull_options options =
         match options with
         | hd :: tl ->
-            if hd land k > 0 then
+            if (1 lsl hd) land k > 0 then
                 cull_options tl
             else
-                (hd lor k) :: cull_options tl
+                hd :: cull_options tl
         | [] -> []
     in
     cull_options (raw_options n)
