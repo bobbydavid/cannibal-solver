@@ -7,13 +7,13 @@ OBJ=$(SRC:.ml=.cmo) $(SRC:.ml=.cmi)
 .phony: target bear big clean
 
 target:
-	ocamlbuild -libs bigarray main.native
+	ocamlbuild -lib bigarray main.native
 
 bear:
-	ocamlbuild -cflag -g -libs bigarray main.native -- ../scenarios/threeBears.inp
+	ocamlbuild -lib bigarray main.native -- ../scenarios/threeBears.inp
 
 big:
-	ocamlbuild -libs bigarray main.native -- ../scenarios/big.inp
+	ocamlbuild -lib bigarray main.native -- ../scenarios/big.inp
 
 clean:
 	ocamlbuild -clean
