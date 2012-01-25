@@ -16,12 +16,7 @@ let initialize_empty_blocks cnt =
     Array.of_list blocks
 
 let update_outcomes players blocks outcomes scenario =
-    (* XXX: Dummy update_outcomes *)
-    let rec dummy_choice n =
-        let next_n = n lsr 1 in
-        if next_n = 0 then 0 else 1 + dummy_choice next_n
-    in
-    outcomes.(scenario) <- dummy_choice scenario
+    outcomes.(scenario) <- Vote.naive_vote players blocks.(scenario) scenario
 
 (*       Old block, [0,2,5,6,9]   New block, [0,2,5,6,7,9]
  *
