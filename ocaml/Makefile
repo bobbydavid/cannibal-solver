@@ -13,10 +13,10 @@ fast:
 	ocamlbuild -lib bigarray main.native
 
 bear: debug
-	ocamlrun -b ./main.byte ../scenarios/threeBears.inp
+	ocamlrun -b ./main.byte < ../scenarios/threeBears.inp
 
 big: debug
-	ocamlrun -b ./main.byte ../scenarios/big.inp
+	ocamlrun -b ./main.byte < ../scenarios/big.inp
 
 clean:
 	ocamlbuild -clean

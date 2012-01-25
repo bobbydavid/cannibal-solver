@@ -8,10 +8,9 @@ let print_usage () =
     print_newline ()
 
 (* Given a filename, return the tuples that represent the players *)
-let players_of_filename filename =
+let players_of_filename chan =
     let lines =
         let lines = ref[] in
-        let chan = open_in filename in
         try
             while true; do
                 lines := input_line chan :: !lines
@@ -39,16 +38,26 @@ let players_of_filename filename =
     in
     List.fold_left add_player [] lines
 
+let rec handle_args = function
+    | [] -> ()
+    | hd :: tl -> (
+        match hd with
+        | "-v" -> Debug.is_verbose.contents <- true
+        | "-h"
+        | "-help"
+        | "--help" -> print_usage (); exit 0
+        | s -> failwith("Unknown parameter: "^s)
+    );
+    handle_args tl
 
 (* MAIN *)
 let _ =
-    if Array.length Sys.argv != 2 then
-        print_usage ()
-    else
-        let players = players_of_filename Sys.argv.(1) in
-        let results = Solver.solve players in
-        let print_event (day, name) =
-            print_endline ("Day " ^ (string_of_int day) ^ ": " ^ name ^ " dies.")
-        in
-        List.iter print_event results
+    handle_args(List.tl(Array.to_list Sys.argv));
+    let input_channel = stdin (* open_in Sys.argv.(1) *) in
+    let players = players_of_filename input_channel in
+    let results = Solver.solve players in
+    let print_event (day, name) =
+        print_endline ("Day " ^ (string_of_int day) ^ ": " ^ name ^ " dies.")
+    in
+    List.iter print_event results
 
