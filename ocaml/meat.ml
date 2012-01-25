@@ -35,8 +35,8 @@ let update_outcomes players blocks outcomes scenario =
  * w is old_victim, the predetermined 'victim' for the old_block scenario.
  * v is new_victim, the current hypothetical victim in the new_block scenario.
  * new_scenario - Player v = old_scenario.
- * old_block.{w, } are the lives for each player if w is killed.
- * new_Block.{v, } are the lives for each player if v is killed.
+ * old_block.{ ,w} are the lives for each player if w is killed.
+ * new_Block.{ ,v} are the lives for each player if v is killed.
  *)
 let calc_column old_scenario old_block old_victim new_block ancestor days =
     let new_scenario = old_scenario lor (1 lsl ancestor) in
@@ -49,9 +49,9 @@ let calc_column old_scenario old_block old_victim new_block ancestor days =
     let rec fill_in_column y =
         let _ =
             match compare y new_victim with
-            | -1 -> new_block.{new_victim, y} <- old_block.{old_victim, y} + days
-            |  0 -> new_block.{new_victim, y} <- 0
-            |  1 -> new_block.{new_victim, y} <- old_block.{old_victim, y - 1} + days
+            | -1 -> new_block.{y, new_victim} <- old_block.{y, old_victim} + days
+            |  0 -> new_block.{y, new_victim} <- 0
+            |  1 -> new_block.{y, new_victim} <- old_block.{y - 1, old_victim} + days
             |  n -> failwith("Unexpected result from compare: " ^ (string_of_int n))
         in
         if y > 0 then fill_in_column (y - 1) else ()
