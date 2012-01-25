@@ -2,6 +2,8 @@
 open Bigarray
 
 type pdatum_t = int * int * string
+type preference_t = Heavier | Lighter
+exception MultipleWinners of pdatum_t list
 
 let ix_of pdatum     = let (i,_,_) = pdatum in i
 let weight_of pdatum = let (_,w,_) = pdatum in w
@@ -16,28 +18,51 @@ let rec collect_players scenario players =
         else
             (collect_players (scenario lsr 1) tl)
 
-let make_up_your_mind block_slice pdatum =
-    let rec zip block_slice ix =
-        if (ix = Array1.dim block_slice) then
-            []
-        else
-            (ix, block_slice.{ix}) :: zip block_slice (ix + 1)
+let ix_of_winner = function
+    | [] -> failwith("Bug: trying to choose winner from the empty set")
+    | hd :: [] -> ix_of hd
+    | hd :: tl -> raise(MultipleWinners(hd :: tl))
+
+let break_tie_by_weight pref pdata =
+    let pdata_subset = match pref with
+        | Lighter -> Utils.find_max_set (fun x -> -(weight_of x)) pdata
+        | Heavier -> Utils.find_max_set weight_of pdata
     in
-    let block_list = zip block_slice 0 in
+    ix_of_winner pdata_subset
+
+let break_tie_by_name pdata =
+    (* TODO: Tiebreaking by name! *)
+    print_endline("Tiebreaking by name is not supported yet");
+    ix_of (List.hd pdata)
+
+let resolve_winner pref pdata =
+    try
+        ix_of_winner pdata
+    with MultipleWinners(pdata) ->
+    try
+        break_tie_by_weight pref pdata
+    with MultipleWinners(pdata_subset) ->
+    try
+        break_tie_by_name pdata_subset
+    with MultipleWinners(pdatum :: _) ->
+        failwith("Tiebreaking failed because multiple people had the name: "^(name_of pdatum))
+
+let make_up_your_mind pdata block_slice pdatum =
+    let remap_index (_,w,n) ix = (ix,w,n) in
+    let rec remap_indexes pdata ix = match pdata with
+        | [] -> []
+        | hd :: tl -> remap_index hd ix :: remap_indexes tl (ix+1)
+    in
+    let pdata = remap_indexes pdata 0 in
+    let block_list = Utils.list_of_array1 block_slice in
+    let zipped_list = List.combine block_list pdata in
     print_endline(
         (name_of pdatum) ^
         " deciding based on days to live: " ^
-        (List.fold_left (fun s (_,i) -> s^" "^(string_of_int i)) "" block_list)
+        (List.fold_left (fun s i -> s^" "^(string_of_int i)) "" block_list)
     );
-    let choices = Utils.find_max_set snd block_list in
-    match choices with
-    | [] -> failwith ((name_of pdatum) ^ " decided not to vote for anyone?")
-    | hd :: tl ->
-        if tl = [] then
-            fst hd
-        else
-            (* TODO: Handle ties! *)
-            failwith((name_of pdatum)^" cannot make up his mind because of a tie")
+    let (_, pdata_subset) = List.split (Utils.find_max_set fst zipped_list) in
+    resolve_winner Heavier pdata_subset
 
 (*
  * Naive Vote:
@@ -53,21 +78,17 @@ let naive_vote players block scenario =
         let dim = Array2.dim1 block in
         List.rev_map (fun x -> Array2.slice_left block x) (Utils.ints_below_n dim)
     in
-    let ballots = List.map2 make_up_your_mind sliced_block pdata in
-    let ballot_boxes = Array.make (List.length ballots) 0 in
-    let cast_ballot choice pdatum =
+    let ballots = List.map2 (make_up_your_mind pdata) sliced_block pdata in
+    let ballot_boxes = Array.make (List.length pdata) 0 in
+    List.iter2 (fun choice pdatum ->
+        print_endline((name_of pdatum)^" votes for "^(name_of (List.nth pdata choice)));
         ballot_boxes.(choice) <- ballot_boxes.(choice) + weight_of pdatum
-    in
-    List.iter2 cast_ballot ballots pdata;
+    ) ballots pdata;
     let votes = Array.to_list ballot_boxes in
     List.iter2 (fun x (_,_,y) -> print_endline("Votes for "^y^": "^(string_of_int x))) votes pdata;
     let (victims, _) = List.split (Utils.find_max_set snd (List.combine pdata votes)) in
     print_endline((string_of_int(List.length victims))^" victims were found");
-    (* TODO: Handle ties! *)
-    match victims with
-    | hd :: [] -> ix_of hd
-    | hd :: tl -> failwith "There were multiple winners of the election. Ties not yet supported"
-    | [] -> failwith "Nobody was selected as a victim. It's a bug!"
+    resolve_winner Lighter victims
 
 
 
