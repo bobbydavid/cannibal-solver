@@ -1,7 +1,13 @@
-           (* ix, weight, name, votes *)
-type pdata_t = int * int * string * int
-exception NoClearWinner of pdata_t list
 
+open Bigarray
+
+type preference_t = Heavier | Lighter
+type pdatum_t = int * int * string
+exception NoClearWinner of preference_t * pdatum_t list
+
+let ix_of pdatum     = let (i,_,_) = pdatum in i
+let weight_of pdatum = let (_,w,_) = pdatum in w
+let name_of pdatum   = let (_,_,n) = pdatum in n
 
 let rec collect_players scenario players =
     match players with
@@ -12,15 +18,35 @@ let rec collect_players scenario players =
         else
             (collect_players (scenario lsr 1) tl)
 
-let rec do_votes block pdata =
-    pdata
+let break_tie pref pdata =
+    (* TODO: Heavier -> heaviest wins, Lighter -> lightest wins *)
+    (*
+    match pref with
+    | Heavier -> ()
+    | Lighter -> ()
+    *)
+    ix_of (List.hd (List.rev pdata))
 
-let find_most_votes pdata =
-    raise(NoClearWinner(pdata))
+let make_decision block_slice pdatum =
+    try
+        (* TODO: Decide who pdatum votes for, if it's possible to tell *)
+        (* XXX: Currently, this is suicidal voting! *)
+        let rec find_zero n =
+            if block_slice.{n} = 0 then n else find_zero (succ n)
+        in
+        find_zero 0
+    with NoClearWinner(pref, pdata) -> (break_tie pref pdata)
 
-let break_tie pdata =
-    let (ix, _, _, _) = (List.hd (List.rev pdata)) in
-    ix
+let pick_victims (lst, max_votes) pdatum vote_count =
+    match lst with
+    | []  -> ([ pdatum; ], vote_count)
+    | lst -> (
+        match compare vote_count max_votes with
+        | -1 -> (lst, max_votes)
+        |  0 -> (pdatum :: lst, max_votes)
+        |  1 -> ([ pdatum; ], vote_count)
+        |  n -> failwith "Unexpected result from compare"
+    )
 
 (*
  * Naive Vote:
@@ -30,14 +56,25 @@ let break_tie pdata =
  * the victim.
  *)
 let naive_vote players block scenario =
-    let assemble_pdata i p = (i, fst p, snd p, 0) in
+    let assemble_pdata i p = (i, fst p, snd p) in
     let pdata_array = Array.mapi assemble_pdata players in
     let pdata = collect_players scenario (Array.to_list pdata_array) in
-    let pdata = do_votes block pdata in
-    try
-        find_most_votes pdata
-    with NoClearWinner(pdata) ->
-        break_tie pdata
+    let sliced_block =
+        let dim = Array2.dim1 block in
+        List.map (fun x -> Array2.slice_left block x) (Utils.ints_below_n dim)
+    in
+    let ballots = List.map2 make_decision sliced_block pdata in
+    let votes = Array.make (List.length ballots) 0 in
+    let cast_ballot choice pdatum =
+        votes.(choice) <- votes.(choice) + weight_of pdatum
+    in
+    List.iter2 cast_ballot ballots pdata;
+    let votes = Array.to_list votes in
+    let (victims, _) = List.fold_left2 pick_victims ([], 0) pdata votes in
+    match victims with
+    | hd :: [] -> ix_of hd
+    | hd :: tl -> break_tie Lighter (hd :: tl)
+    | [] -> failwith "Nobody was selected as a victim. How kind. But buggy!"
 
 
 
