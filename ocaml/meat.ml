@@ -1,19 +1,14 @@
 open Bigarray
 
 let initialize_empty_blocks cnt =
-    let counts =
-        let rec count_mouths = function
-            | 0 -> [ 0; ]
-            | x -> Utils.count_bits x :: count_mouths (x - 1)
-        in
-        List.rev (count_mouths (1 lsl cnt - 1))
-    in
+    let blocks = Array.make (1 lsl cnt) 0 in
     let gen_block k =
-        Array2.create int c_layout k k
+        let bits = Utils.count_bits k in
+        let matrix = Array2.create int c_layout bits bits in
+        Array2.fill matrix 0;
+        matrix
     in
-    let blocks = List.map gen_block counts in
-    let _ = List.map (fun x -> Array2.fill x 0) blocks in
-    Array.of_list blocks
+    Array.map gen_block (Array.mapi (+) blocks)
 
 let update_outcomes players blocks outcomes scenario =
     outcomes.(scenario) <- Vote.naive_vote players blocks.(scenario) scenario
