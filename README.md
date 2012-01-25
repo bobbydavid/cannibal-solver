@@ -21,17 +21,36 @@ and butchered, that inhabitant yields one meal for every pound they weigh.
 So how does the group decide the next victim? By voting! Every resident
 of the island votes for who they'd most like to eat, and majority rules
 (remember, that's majority determined by weight, not by votes). If there
-is no clear majority, than things get complicated. The residents will
+is no clear majority, than things get complicated (see the voting section,
+below).
+
+To solve the cannibal problem, you must determine the order in which
+each island inhabitant is eaten and the day that the last survivor
+dies.
+
+
+Voting Options
+--------------
+
+#### Naive Voting
+
+Each living member of the community will vote to eat the person that
+extends their own life the longest. Given two equal options, each
+voter will prefer to vote for heavier people to prolong the time until
+the next killing. If two or more people hold a plurality, than the
+smallest person is killed. If there is a tie for the smallest, the
+person who comes alphabetically first is killed.
+
+
+#### Candorcet Voting
+
+The residents will
 conduct run-off elections between every candidate and determine the
 [Smith set](http://en.wikipedia.org/wiki/Smith_set), i.e. the smallest
 set of candidates where any candidate in the set would "win" against
 any candidate outside the set in a runoff election. These finalists
 all fight each other in a glorious battle royale until someone dies.
 Inevitabily, it is the lightest one(s) who die in the battle royale.
-
-To solve the cannibal problem, you must determine the order in which
-each island inhabitant is eaten and the day that the last survivor
-dies.
 
 
 Additional Notes
