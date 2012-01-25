@@ -39,6 +39,7 @@ let make_decision block_slice pdatum =
         find_zero 0
     with NoClearWinner(pref, pdata) -> (break_tie pref pdata)
 
+(*
 let pick_victims (lst, max_votes) pdatum vote_count =
     match lst with
     | []  -> ([ pdatum; ], vote_count)
@@ -49,6 +50,7 @@ let pick_victims (lst, max_votes) pdatum vote_count =
         |  1 -> ([ pdatum; ], vote_count)
         |  n -> failwith "Unexpected result from compare"
     )
+*)
 
 (*
  * Naive Vote:
@@ -73,7 +75,7 @@ let naive_vote players block scenario =
     List.iter2 cast_ballot ballots pdata;
     let votes = Array.to_list votes in
     List.iter2 (fun x (_,_,y) -> print_endline(y^" vote: "^(string_of_int x))) votes pdata;
-    let (victims, _) = List.fold_left2 pick_victims ([], 0) pdata votes in
+    let (victims, _) = List.split (Utils.find_max_set snd (List.combine pdata votes)) in
     print_endline((string_of_int(List.length victims))^" victims were found");
     match victims with
     | hd :: [] -> ix_of hd

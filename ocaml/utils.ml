@@ -57,3 +57,21 @@ let rec string_of_comb n k =
         let digit = if mask land k > 0 then "1" else "0" in
         digit ^ (string_of_comb (n-1) k)
 
+let find_max_set fn set =
+    let do_find_max_set fn (max, max_value) cur =
+        match max with
+        | [] -> ([ cur; ], fn cur)
+        | max -> (
+            let cur_value = fn cur in
+            match compare cur_value max_value with
+            | -1 -> (max, max_value)
+            |  0 -> (cur :: max, max_value)
+            |  1 -> ([ cur; ], cur_value)
+            |  n -> failwith "Unexpected result from compare"
+        )
+    in
+    fst (List.fold_left (do_find_max_set fn) ([], 0) set)
+
+
+
+
