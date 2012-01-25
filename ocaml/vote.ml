@@ -20,11 +20,6 @@ let rec collect_players scenario players =
 
 let break_tie pref pdata =
     (* TODO: Heavier -> heaviest wins, Lighter -> lightest wins *)
-    (*
-    match pref with
-    | Heavier -> ()
-    | Lighter -> ()
-    *)
     ix_of (List.hd (List.rev pdata))
 
 let make_decision block_slice pdatum =
@@ -32,7 +27,11 @@ let make_decision block_slice pdatum =
         (* TODO: Decide who pdatum votes for, if it's possible to tell *)
         (* XXX: Currently, this is suicidal voting! *)
         let rec find_zero n =
-            if block_slice.{n} = 0 then n else find_zero (succ n)
+            if block_slice.{n} = 0 then
+                ( print_endline((name_of pdatum)^" votes for # "^(string_of_int n));
+                n )
+            else
+                find_zero (succ n)
         in
         find_zero 0
     with NoClearWinner(pref, pdata) -> (break_tie pref pdata)
@@ -61,7 +60,7 @@ let naive_vote players block scenario =
     let pdata = collect_players scenario (Array.to_list pdata_array) in
     let sliced_block =
         let dim = Array2.dim1 block in
-        List.map (fun x -> Array2.slice_left block x) (Utils.ints_below_n dim)
+        List.rev_map (fun x -> Array2.slice_left block x) (Utils.ints_below_n dim)
     in
     let ballots = List.map2 make_decision sliced_block pdata in
     let votes = Array.make (List.length ballots) 0 in
@@ -70,7 +69,9 @@ let naive_vote players block scenario =
     in
     List.iter2 cast_ballot ballots pdata;
     let votes = Array.to_list votes in
+    List.iter2 (fun x (_,_,y) -> print_endline(y^" vote: "^(string_of_int x))) votes pdata;
     let (victims, _) = List.fold_left2 pick_victims ([], 0) pdata votes in
+    print_endline((string_of_int(List.length victims))^" victims were found");
     match victims with
     | hd :: [] -> ix_of hd
     | hd :: tl -> break_tie Lighter (hd :: tl)
