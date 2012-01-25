@@ -24,20 +24,23 @@ let break_tie pref pdata =
     (* XXX: Currently selects from head of list *)
     ix_of (List.hd pdata)
 
-let make_decision block_slice pdatum =
-    try
-        (* TODO: Decide who this pdatum votes for, i.e. index of largest value
-         * in block_slice *)
-        (* XXX: Current strategy is to vote for yourself! *)
-        let rec find_zero n =
-            if block_slice.{n} = 0 then
-                ( print_endline((name_of pdatum)^" votes for # "^(string_of_int n));
-                n )
-            else
-                find_zero (succ n)
-        in
-        find_zero 0
-    with NoClearWinner(pref, pdata) -> (break_tie pref pdata)
+let make_up_your_mind block_slice pdatum =
+    let rec zip block_slice ix =
+        if (ix = Array1.dim block_slice) then
+            []
+        else
+            (ix, block_slice.{ix}) :: zip block_slice (ix + 1)
+    in
+    let block_list = zip block_slice 0 in
+    let choices = Utils.find_max_set snd block_list in
+    match choices with
+    | [] -> failwith ((name_of pdatum) ^ " decided not to vote for anyone?")
+    | hd :: tl ->
+        if tl = [] then
+            fst hd
+        else
+            (* TODO: Handle ties! *)
+            fst hd
 
 (*
 let pick_victims (lst, max_votes) pdatum vote_count =
@@ -67,13 +70,13 @@ let naive_vote players block scenario =
         let dim = Array2.dim1 block in
         List.rev_map (fun x -> Array2.slice_left block x) (Utils.ints_below_n dim)
     in
-    let ballots = List.map2 make_decision sliced_block pdata in
-    let votes = Array.make (List.length ballots) 0 in
+    let ballots = List.map2 make_up_your_mind sliced_block pdata in
+    let ballot_boxes = Array.make (List.length ballots) 0 in
     let cast_ballot choice pdatum =
-        votes.(choice) <- votes.(choice) + weight_of pdatum
+        ballot_boxes.(choice) <- ballot_boxes.(choice) + weight_of pdatum
     in
     List.iter2 cast_ballot ballots pdata;
-    let votes = Array.to_list votes in
+    let votes = Array.to_list ballot_boxes in
     List.iter2 (fun x (_,_,y) -> print_endline(y^" vote: "^(string_of_int x))) votes pdata;
     let (victims, _) = List.split (Utils.find_max_set snd (List.combine pdata votes)) in
     print_endline((string_of_int(List.length victims))^" victims were found");
