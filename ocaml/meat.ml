@@ -12,6 +12,7 @@ let initialize_empty_blocks cnt =
         Array2.create int c_layout k k
     in
     let blocks = List.map gen_block counts in
+    let _ = List.map (fun x -> Array2.fill x 0) blocks in
     Array.of_list blocks
 
 let update_outcomes players blocks outcomes scenario =
@@ -76,7 +77,6 @@ let rec analyze_block_columns players blocks outcomes scenario ancestors =
             let old_victim = Utils.find_nth_bit scenario outcomes.(scenario) in
             let old_block = blocks.(scenario) in
             let new_scenario = scenario lor (1 lsl ancestor) in
-            let new_victim = Utils.count_bits((1 lsl ancestor - 1) land new_scenario) in
             let new_block = blocks.(new_scenario) in
             print_endline("Analyze column for ancestor " ^
                 (string_of_int ancestor) ^
