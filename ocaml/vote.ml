@@ -24,6 +24,7 @@ let ix_of_winner = function
     | hd :: tl -> raise(MultipleWinners(hd :: tl))
 
 let break_tie_by_weight pref pdata =
+    print_endline("Breaking tie by weight...");
     let pdata_subset = match pref with
         | Lighter -> Utils.find_max_set (fun x -> -(weight_of x)) pdata
         | Heavier -> Utils.find_max_set weight_of pdata
@@ -31,9 +32,10 @@ let break_tie_by_weight pref pdata =
     ix_of_winner pdata_subset
 
 let break_tie_by_name pdata =
-    (* TODO: Tiebreaking by name! *)
-    print_endline("Tiebreaking by name is not supported yet");
-    ix_of (List.hd pdata)
+    print_endline("Breaking tie by name...");
+    let compare_names (_,_,n1) (_,_,n2) = String.compare n1 n2 in
+    let pdata_sorted = List.sort compare_names pdata in
+    ix_of (List.hd pdata_sorted)
 
 let resolve_winner pref pdata =
     try
