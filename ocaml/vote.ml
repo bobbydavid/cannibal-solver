@@ -20,12 +20,15 @@ let rec collect_players scenario players =
 
 let break_tie pref pdata =
     (* TODO: Heavier -> heaviest wins, Lighter -> lightest wins *)
-    ix_of (List.hd (List.rev pdata))
+    (* TODO: a tie -> alphabetical *)
+    (* XXX: Currently selects from head of list *)
+    ix_of (List.hd pdata)
 
 let make_decision block_slice pdatum =
     try
-        (* TODO: Decide who pdatum votes for, if it's possible to tell *)
-        (* XXX: Currently, this is suicidal voting! *)
+        (* TODO: Decide who this pdatum votes for, i.e. index of largest value
+         * in block_slice *)
+        (* XXX: Current strategy is to vote for yourself! *)
         let rec find_zero n =
             if block_slice.{n} = 0 then
                 ( print_endline((name_of pdatum)^" votes for # "^(string_of_int n));
