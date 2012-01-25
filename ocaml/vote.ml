@@ -24,7 +24,7 @@ let ix_of_winner = function
     | hd :: tl -> raise(MultipleWinners(hd :: tl))
 
 let break_tie_by_weight pref pdata =
-    print_endline("Breaking tie by weight...");
+    (* print_endline("Breaking tie by weight..."); *)
     let pdata_subset = match pref with
         | Lighter -> Utils.find_max_set (fun x -> -(weight_of x)) pdata
         | Heavier -> Utils.find_max_set weight_of pdata
@@ -32,7 +32,7 @@ let break_tie_by_weight pref pdata =
     ix_of_winner pdata_subset
 
 let break_tie_by_name pdata =
-    print_endline("Breaking tie by name...");
+    (* print_endline("Breaking tie by name..."); *)
     let compare_names (_,_,n1) (_,_,n2) = String.compare n1 n2 in
     let pdata_sorted = List.sort compare_names pdata in
     ix_of (List.hd pdata_sorted)
@@ -58,11 +58,11 @@ let make_up_your_mind pdata block_slice pdatum =
     let pdata = remap_indexes pdata 0 in
     let block_list = Utils.list_of_array1 block_slice in
     let zipped_list = List.combine block_list pdata in
-    print_endline(
+    (* print_endline(
         (name_of pdatum) ^
         " deciding based on days to live: " ^
         (List.fold_left (fun s i -> s^" "^(string_of_int i)) "" block_list)
-    );
+    ); *)
     let (_, pdata_subset) = List.split (Utils.find_max_set fst zipped_list) in
     resolve_winner Heavier pdata_subset
 
@@ -83,13 +83,13 @@ let naive_vote players block scenario =
     let ballots = List.map2 (make_up_your_mind pdata) sliced_block pdata in
     let ballot_boxes = Array.make (List.length pdata) 0 in
     List.iter2 (fun choice pdatum ->
-        Debug.print_vote((name_of pdatum)^" votes for "^(name_of (List.nth pdata choice)));
+        (* print_endline((name_of pdatum)^" votes for "^(name_of (List.nth pdata choice))); *)
         ballot_boxes.(choice) <- ballot_boxes.(choice) + weight_of pdatum
     ) ballots pdata;
     let votes = Array.to_list ballot_boxes in
-    List.iter2 (fun x (_,_,y) -> print_endline("Votes for "^y^": "^(string_of_int x))) votes pdata;
+    (* List.iter2 (fun x (_,_,y) -> print_endline("Votes for "^y^": "^(string_of_int x))) votes pdata; *)
     let (victims, _) = List.split (Utils.find_max_set snd (List.combine pdata votes)) in
-    print_endline((string_of_int(List.length victims))^" victims were found");
+    (* print_endline((string_of_int(List.length victims))^" victims were found"); *)
     resolve_winner Lighter victims
 
 

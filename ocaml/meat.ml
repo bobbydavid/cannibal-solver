@@ -41,11 +41,11 @@ let update_outcomes players blocks outcomes scenario =
 let calc_column old_scenario old_block old_victim new_block ancestor days =
     let new_scenario = old_scenario lor (1 lsl ancestor) in
     let new_victim = Utils.count_bits(new_scenario land ((1 lsl ancestor)-1)) in
-    print_endline("\tIf player " ^ (string_of_int ancestor) ^ " just died...");
-    Utils.print_matrix old_block;
+    (* print_endline("\tIf player " ^ (string_of_int ancestor) ^ " just died...");
+    Utils.print_matrix old_block; *)
     let new_cnt = Utils.count_bits new_scenario in
-    print_endline("\t["^(Utils.string_of_comb 6 old_scenario)^" <- "^(Utils.string_of_comb 6 new_scenario)^"]");
-    print_endline("\told_victim: "^(string_of_int old_victim)^"; new_victim: "^(string_of_int new_victim)^"; days: "^(string_of_int days));
+    (* print_endline("\t["^(Utils.string_of_comb 6 old_scenario)^" <- "^(Utils.string_of_comb 6 new_scenario)^"]");
+    print_endline("\told_victim: "^(string_of_int old_victim)^"; new_victim: "^(string_of_int new_victim)^"; days: "^(string_of_int days)); *)
     let rec fill_in_column y =
         let _ =
             match compare y new_victim with
@@ -56,14 +56,13 @@ let calc_column old_scenario old_block old_victim new_block ancestor days =
         in
         if y > 0 then fill_in_column (y - 1) else ()
     in
-    fill_in_column (new_cnt - 1);
-    Utils.print_matrix new_block
+    fill_in_column (new_cnt - 1)
+    (* Utils.print_matrix new_block *)
 
 
 
 
 let rec analyze_block_columns players blocks outcomes scenario ancestors =
-    let cnt = Array.length players in
     let mouths = Utils.count_bits scenario in
     match ancestors with
     | ancestor :: tl ->
@@ -73,10 +72,11 @@ let rec analyze_block_columns players blocks outcomes scenario ancestors =
             let old_block = blocks.(scenario) in
             let new_scenario = scenario lor (1 lsl ancestor) in
             let new_block = blocks.(new_scenario) in
-            print_endline("Analyze column for ancestor " ^
+            (* print_endline("Analyze column for ancestor " ^
                 (string_of_int ancestor) ^
                 " of scenario " ^
-                (Utils.string_of_comb cnt scenario));
+                (Utils.string_of_comb cnt scenario)
+            ); *)
             calc_column scenario old_block old_victim new_block ancestor days;
             analyze_block_columns players blocks outcomes scenario tl
         )
@@ -94,9 +94,9 @@ let rec enumerate_possible_ancestors cnt scenario = match cnt with
 
 let analyze_block players blocks outcomes scenario =
     let cnt = Array.length players in
-    print_endline("Begin block " ^ (Utils.string_of_comb cnt scenario) ^ ":");
+    (* print_endline("Begin block " ^ (Utils.string_of_comb cnt scenario) ^ ":"); *)
     let ancestors = enumerate_possible_ancestors cnt scenario in
-    print_endline("\tThis block has "^(string_of_int(List.length ancestors))^" possible ancestors");
+    (* print_endline("\tThis block has "^(string_of_int(List.length ancestors))^" possible ancestors"); *)
     analyze_block_columns players blocks outcomes scenario ancestors
 
 let rec calc_blocks players blocks outcomes mouths =
@@ -107,7 +107,7 @@ let rec calc_blocks players blocks outcomes mouths =
         (* 1. Recursively do smaller blocks *)
         let mouths = mouths - 1 in
         calc_blocks players blocks outcomes mouths;
-        print_endline("Analyzing blocks for " ^ (string_of_int cnt) ^ "-choose-" ^ (string_of_int mouths));
+        (* print_endline("Analyzing blocks for " ^ (string_of_int cnt) ^ "-choose-" ^ (string_of_int mouths)); *)
         (* 2. Analyze each of the blocks *)
         let combins = Combin.get_all_combinations cnt mouths in
         let _ = List.map (analyze_block players blocks outcomes) combins in
@@ -124,6 +124,6 @@ let solve_outcomes players =
     let num_scenarios = 1 lsl cnt in
     let outcomes = Array.make num_scenarios (-1) in
     let _ = calc_blocks players blocks outcomes cnt in
-    Array.iter Utils.print_matrix blocks;
+    (* Array.iter Utils.print_matrix blocks; *)
     outcomes
 

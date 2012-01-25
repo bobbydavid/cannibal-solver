@@ -7,8 +7,6 @@ let print_usage () =
     print_newline ();
     print_endline  "  Flags:";
     print_endline  "    -h\tThis help information";
-    print_endline  "    -b\tTable of bits showing the order in which people die";
-    print_endline  "    -v\tWho votes for whom in every calculation";
     print_endline  "    ??\tFlags are not fully implemented yet :("
 
 (* Given a filename, return the tuples that represent the players *)
@@ -51,8 +49,7 @@ let rec handle_args = function
         | "-h"
         | "-help"
         | "--help" -> print_usage (); exit 0
-        | "-b" -> Debug.show_bit_history := true
-        | "-v" -> Debug.show_vote := true
+        | "-v" -> print_endline "Verbose mode doesn't yet exist"
         | s -> failwith("Unknown parameter: "^s)
     );
     handle_args tl

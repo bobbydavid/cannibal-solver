@@ -1,10 +1,10 @@
 
 
 
-let show_bit_history = ref false
-let print_bh s =
-    if !show_bit_history then print_endline s else ()
 
-let show_vote = ref false
-let print_vote s =
-    if !show_vote then print_endline s else ()
+(* TODO:
+ * 1. Add some cool debug printing functions here
+ * 2. Add switches to turn them on in main.ml
+ * 3. Add description of the switches to print_usage()
+ *)
+
