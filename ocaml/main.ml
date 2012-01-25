@@ -1,11 +1,14 @@
 
 let print_usage () =
     print_newline ();
-    print_endline "OCaml Cannibal Program Solver";
+    print_endline  "OCaml Cannibal Program Solver";
     print_newline ();
-    print_endline "  Usage:";
-    print_endline (" " ^ Sys.argv.(0) ^ " <input file>");
-    print_newline ()
+    print_endline  "  Usage:";
+    print_endline ("  " ^ Sys.argv.(0) ^ " [option flag(s)]");
+    print_newline ();
+    print_endline  "  Flags:";
+    print_endline  "    -h\tPrint this help information";
+    print_endline  "    ??\tFlags are not fully implemented yet :("
 
 (* Given a filename, return the tuples that represent the players *)
 let players_of_filename chan =
@@ -42,7 +45,7 @@ let rec handle_args = function
     | [] -> ()
     | hd :: tl -> (
         match hd with
-        | "-v" -> Debug.is_verbose.contents <- true
+        | "-v" -> Debug.show_verbose.contents <- true
         | "-h"
         | "-help"
         | "--help" -> print_usage (); exit 0
