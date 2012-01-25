@@ -1,14 +1,3 @@
-(*
- * players: array of player tuples (weight, name)
- * cnt: # of players in the game.
- * outcomes: For every 2^cnt possible set of living players, an integer
- *     representing who gets eaten next (index in 'players' array).
- *     Initialized to -1, meaning unknown.
- * blocks: Each block is an NxN matrix where each entry .(x).(y) is the number
- *     of days that person (y) will live if (x) is eaten next.
- * mouths: # of players left alive.
- *
- *)
 
 (* Given a scenario and a victim number, return the next scenario with that
  * victim no longer alive *)

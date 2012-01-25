@@ -40,19 +40,6 @@ let make_up_your_mind block_slice pdatum =
             failwith((name_of pdatum)^" cannot make up his mind because of a tie")
 
 (*
-let pick_victims (lst, max_votes) pdatum vote_count =
-    match lst with
-    | []  -> ([ pdatum; ], vote_count)
-    | lst -> (
-        match compare vote_count max_votes with
-        | -1 -> (lst, max_votes)
-        |  0 -> (pdatum :: lst, max_votes)
-        |  1 -> ([ pdatum; ], vote_count)
-        |  n -> failwith "Unexpected result from compare"
-    )
-*)
-
-(*
  * Naive Vote:
  * Each player votes for eating the person who gives them the longest life.
  * The largest plurality wins. If there is a tie, the smaller person is the

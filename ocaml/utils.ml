@@ -13,14 +13,6 @@ let rec ints_below_n n =
     else
         (n - 1) :: ints_below_n (n - 1)
 
-(*
-let rec find_nth_bit n skips =
-    let this_bit = n land 1 in
-    if (this_bit = 1 && skips = 0) then
-        0
-    else
-        1 + find_nth_bit (n lsr 1) (skips - this_bit)
-*)
 let find_nth_bit n k =
     let kth = 1 lsl k in
     assert(count_bits(n land kth) = 1);
