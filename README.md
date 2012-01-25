@@ -57,6 +57,19 @@ all fight each other in a glorious battle royale until someone dies.
 Inevitabily, it is the lightest one(s) who die in the battle royale.
 
 
+#### Mob Voting
+
+Mob voting starts like naive voting, where each person votes to extend their
+own life the longest. However, once that plurality is determined, the people
+who are _not_ taking part in the killing have the opportunity to elect an
+alternative victim. If they can form a larger plurality of the remaining
+people, they can challenge and defeat the existing mob. After the skirmish,
+the members of the beaten plurality are knocked out and can no longer
+participate in voting for this round. This continues until no plurality can
+be formed that can challenge the mob. If multiple groups can be created to
+challenge the existing mob, we only consider the largest one.
+
+
 Additional Notes
 ----------------
 
