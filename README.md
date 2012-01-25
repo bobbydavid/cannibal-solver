@@ -128,13 +128,13 @@ the island. From our assumption, this means a unique solution exists as to
 the order people will be eaten. Therefore Joe will be able to calculate
 exactly how many days he will survive in the event that each inhabitant dies.
 Assuming that the voting system never offers a perverse incentive to vote
-against one's own top candidate [1], Joe and anyone observing Joe will be able
+against one's own top candidate [[1]], Joe and anyone observing Joe will be able
 to deterministically determine how he will vote.
 
 The same logic applies to every survivor in the set of N + 1 survivors,
 meaning that the election has a determinate outcome. These
 outcomes can be used to calculate the Smith set, which itself must exist
-and will be unique[2]. Thus, the N + 1 inhabitants also have a unique
+and will be unique [[2]]. Thus, the N + 1 inhabitants also have a unique
 solution of whom they will eat next.
 
 Inductively, this means that any set of N inhabitants will have a unique
