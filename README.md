@@ -41,6 +41,10 @@ the next killing. If two or more people hold a plurality, than the
 smallest person is killed. If there is a tie for the smallest, the
 person who comes alphabetically first is killed.
 
+Note that each player votes as if he had unilateral control for this round.
+There are cases where it would be beneficial to vote for someone other than
+one's ideal candidate. Naive voting ignores any such scenarios.
+
 
 #### Candorcet Voting
 
