@@ -33,6 +33,7 @@ let rec raw_options = function
     | 1 -> [ 0; ]
     | n -> (n - 1) :: raw_options (n - 1)
 
+(*
 let ancestors_of_scenario n k =
     assert (k < 1 lsl n);
     assert (k > 0);
@@ -47,5 +48,6 @@ let ancestors_of_scenario n k =
     in
     cull_options (raw_options n)
 
+*)
 
 
