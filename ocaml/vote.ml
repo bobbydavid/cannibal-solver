@@ -1,3 +1,7 @@
+           (* ix, weight, name, votes *)
+type pdata_t = int * int * string * int
+exception NoClearWinner of pdata_t list
+
 
 let rec collect_players scenario players =
     match players with
@@ -8,6 +12,15 @@ let rec collect_players scenario players =
         else
             (collect_players (scenario lsr 1) tl)
 
+let rec do_votes block pdata =
+    pdata
+
+let find_most_votes pdata =
+    raise(NoClearWinner(pdata))
+
+let break_tie pdata =
+    let (ix, _, _, _) = (List.hd (List.rev pdata)) in
+    ix
 
 (*
  * Naive Vote:
@@ -17,12 +30,14 @@ let rec collect_players scenario players =
  * the victim.
  *)
 let naive_vote players block scenario =
-    (* XXX: Dummy update_outcomes *)
-    let players = Array.mapi (fun i p -> (i, p)) players in
-    let players = collect_players scenario (Array.to_list players) in
-    let (i, p) = List.hd (List.rev players) in
-    i
-
+    let assemble_pdata i p = (i, fst p, snd p, 0) in
+    let pdata_array = Array.mapi assemble_pdata players in
+    let pdata = collect_players scenario (Array.to_list pdata_array) in
+    let pdata = do_votes block pdata in
+    try
+        find_most_votes pdata
+    with NoClearWinner(pdata) ->
+        break_tie pdata
 
 
 
