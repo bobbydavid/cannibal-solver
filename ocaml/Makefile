@@ -4,16 +4,19 @@ TGT=main.native
 #############################################
 
 OBJ=$(SRC:.ml=.cmo) $(SRC:.ml=.cmi)
-.phony: target bear big clean
+.phony: debug fast bear big clean
 
-target:
+debug:
+	ocamlbuild -cflag -g -lflag -g -lib bigarray main.byte
+
+fast:
 	ocamlbuild -lib bigarray main.native
 
-bear:
-	ocamlbuild -lib bigarray main.native -- ../scenarios/threeBears.inp
+bear: debug
+	ocamlrun -b ./main.byte ../scenarios/threeBears.inp
 
-big:
-	ocamlbuild -lib bigarray main.native -- ../scenarios/big.inp
+big: debug
+	ocamlrun -b ./main.byte ../scenarios/big.inp
 
 clean:
 	ocamlbuild -clean
