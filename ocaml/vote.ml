@@ -47,8 +47,7 @@ let make_up_your_mind block_slice pdatum =
  * the victim.
  *)
 let naive_vote players block scenario =
-    let assemble_pdata i p = (i, fst p, snd p) in
-    let pdata_array = Array.mapi assemble_pdata players in
+    let pdata_array = Array.mapi (fun i p -> (i, fst p, snd p)) players in
     let pdata = collect_players scenario (Array.to_list pdata_array) in
     let sliced_block =
         let dim = Array2.dim1 block in
@@ -68,7 +67,7 @@ let naive_vote players block scenario =
     match victims with
     | hd :: [] -> ix_of hd
     | hd :: tl -> failwith "There were multiple winners of the election. Ties not yet supported"
-    | [] -> failwith "Nobody was selected as a victim. How kind. But buggy!"
+    | [] -> failwith "Nobody was selected as a victim. It's a bug!"
 
 
 
