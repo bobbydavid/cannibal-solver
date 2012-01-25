@@ -127,21 +127,21 @@ Joe has N voting choices. Each choice will result in N survivors left on
 the island. From our assumption, this means a unique solution exists as to
 the order people will be eaten. Therefore Joe will be able to calculate
 exactly how many days he will survive in the event that each inhabitant dies.
-Joe will therefore be able to deterministically assign to each other survivor
-a number that represents the number of days Joe will stay alive if that
-person is eaten. As Joe is playing greedily, he will use these numbers
-to decide his favorite person to eat, as well as any pairwise elections.
+Assuming that the voting system never offers a perverse incentive to vote
+against one's own top candidate [1], Joe and anyone observing Joe will be able
+to deterministically determine how he will vote.
 
 The same logic applies to every survivor in the set of N + 1 survivors,
-meaning that each pairwise election has a determinate outcome. These
-outcomes can be used to calculate the Smith set, which itself [must exist
-and will be unique][1]. Thus, the N + 1 inhabitants also have a unique
+meaning that the election has a determinate outcome. These
+outcomes can be used to calculate the Smith set, which itself must exist
+and will be unique[2]. Thus, the N + 1 inhabitants also have a unique
 solution of whom they will eat next.
 
 Inductively, this means that any set of N inhabitants will have a unique
 solution.
 
-[1]: http://en.wikipedia.org/wiki/Smith_set
+[1]: http://en.wikipedia.org/wiki/Independence_of_irrelevant_alternatives
+[2]: http://en.wikipedia.org/wiki/Smith_set
 
 
 Input File Format
