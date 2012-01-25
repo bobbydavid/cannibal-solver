@@ -42,10 +42,11 @@ let update_outcomes players blocks outcomes scenario =
  * old_block.{w, } are the lives for each player if w is killed.
  * new_Block.{v, } are the lives for each player if v is killed.
  *)
-let calc_column old_scenario old_block old_victim new_block new_victim days =
-    print_endline("\tIf player " ^ (string_of_int new_victim) ^ " just died...");
+let calc_column old_scenario old_block old_victim new_block ancestor days =
+    let new_scenario = old_scenario lor (1 lsl ancestor) in
+    let new_victim = Utils.count_bits(new_scenario land ((1 lsl ancestor)-1)) in
+    print_endline("\tIf player " ^ (string_of_int ancestor) ^ " just died...");
     Utils.print_matrix old_block;
-    let new_scenario = old_scenario lor (1 lsl new_victim) in
     let new_cnt = Utils.count_bits new_scenario in
     print_endline("\t["^(Utils.string_of_comb 6 old_scenario)^" <- "^(Utils.string_of_comb 6 new_scenario)^"]");
     print_endline("\told_victim: "^(string_of_int old_victim)^"; new_victim: "^(string_of_int new_victim)^"; days: "^(string_of_int days));
@@ -69,19 +70,19 @@ let rec analyze_block_columns players blocks outcomes scenario ancestors =
     let cnt = Array.length players in
     let mouths = Utils.count_bits scenario in
     match ancestors with
-    | hd :: tl ->
+    | ancestor :: tl ->
         (
-            let days = Utils.divide_round_up (fst players.(hd)) mouths in
+            let days = Utils.divide_round_up (fst players.(ancestor)) mouths in
             let old_victim = Utils.find_nth_bit scenario outcomes.(scenario) in
             let old_block = blocks.(scenario) in
-            let new_scenario = scenario lor (1 lsl hd) in
-            let new_victim = Utils.count_bits((1 lsl hd - 1) land new_scenario) in
+            let new_scenario = scenario lor (1 lsl ancestor) in
+            let new_victim = Utils.count_bits((1 lsl ancestor - 1) land new_scenario) in
             let new_block = blocks.(new_scenario) in
-                print_endline("Analyze column for ancestor " ^
-                (string_of_int hd) ^
+            print_endline("Analyze column for ancestor " ^
+                (string_of_int ancestor) ^
                 " of scenario " ^
                 (Utils.string_of_comb cnt scenario));
-            calc_column scenario old_block old_victim new_block new_victim days;
+            calc_column scenario old_block old_victim new_block ancestor days;
             analyze_block_columns players blocks outcomes scenario tl
         )
     | [] -> ()
