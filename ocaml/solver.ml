@@ -9,8 +9,11 @@ let update_scenario scenario victim =
  * build a list of events *)
 let rec add_choices players outcomes mouths day scenario =
     let victim = outcomes.(scenario) in
-    print_endline ((Utils.string_of_comb (Array.length players) scenario) ^ ": victim " ^ (string_of_int victim));
     let name = snd players.(victim) in
+    Debug.print_bh (
+        (Utils.string_of_comb (Array.length players) scenario) ^
+        ": " ^ name ^ " dies"
+    );
     let mouths = mouths - 1 in
     match mouths with
     | 0 -> [(day, name); ]
@@ -28,5 +31,8 @@ let solve players_list =
     let outcomes = Meat.solve_outcomes players in
     let first_scenario = (1 lsl cnt) - 1 in
     let first_day = 1 in
-    add_choices players outcomes cnt first_day first_scenario
+    Debug.print_bh "Bit history:";
+    let ret = add_choices players outcomes cnt first_day first_scenario in
+    Debug.print_bh "";
+    ret
 

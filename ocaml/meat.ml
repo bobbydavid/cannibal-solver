@@ -118,22 +118,9 @@ let rec calc_blocks players blocks outcomes mouths =
     let _ = List.map (update_outcomes players blocks outcomes) combins in
     ()
 
-let tmp_print mat dim =
-    let last = 1 lsl dim - 1 in
-    let rec print_c c =
-        print_string((string_of_int c)^" matrix: ");
-        let m = mat.(c) in
-        let x = Array2.dim1 m in
-        let y = Array2.dim2 m in
-        print_endline("<"^(string_of_int x)^" x "^(string_of_int y)^">");
-        if c < last then print_c (succ c) else ()
-    in
-    print_c 0
-
 let solve_outcomes players =
     let cnt = Array.length players in
     let blocks = initialize_empty_blocks cnt in
-    tmp_print blocks cnt;
     let num_scenarios = 1 lsl cnt in
     let outcomes = Array.make num_scenarios (-1) in
     let _ = calc_blocks players blocks outcomes cnt in

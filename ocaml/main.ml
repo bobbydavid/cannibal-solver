@@ -2,12 +2,13 @@
 let print_usage () =
     print_newline ();
     print_endline  "OCaml Cannibal Program Solver";
-    print_newline ();
-    print_endline  "  Usage:";
+    print_newline (); print_endline  "  Usage:";
     print_endline ("  " ^ Sys.argv.(0) ^ " [option flag(s)]");
     print_newline ();
     print_endline  "  Flags:";
-    print_endline  "    -h\tPrint this help information";
+    print_endline  "    -h\tThis help information";
+    print_endline  "    -b\tTable of bits showing the order in which people die";
+    print_endline  "    -v\tWho votes for whom in every calculation";
     print_endline  "    ??\tFlags are not fully implemented yet :("
 
 (* Given a filename, return the tuples that represent the players *)
@@ -39,16 +40,19 @@ let players_of_filename chan =
             raise (Failure("Badly formatted input file on line " ^
             (string_of_int(List.length players + 1))))
     in
-    List.fold_left add_player [] lines
+    match List.fold_left add_player [] lines with
+    | [] -> failwith "Cannot calculate a scenario with no players"
+    | lst -> lst
 
 let rec handle_args = function
     | [] -> ()
     | hd :: tl -> (
         match hd with
-        | "-v" -> Debug.show_verbose.contents <- true
         | "-h"
         | "-help"
         | "--help" -> print_usage (); exit 0
+        | "-b" -> Debug.show_bit_history := true
+        | "-v" -> Debug.show_vote := true
         | s -> failwith("Unknown parameter: "^s)
     );
     handle_args tl

@@ -83,7 +83,7 @@ let naive_vote players block scenario =
     let ballots = List.map2 (make_up_your_mind pdata) sliced_block pdata in
     let ballot_boxes = Array.make (List.length pdata) 0 in
     List.iter2 (fun choice pdatum ->
-        print_endline((name_of pdatum)^" votes for "^(name_of (List.nth pdata choice)));
+        Debug.print_vote((name_of pdatum)^" votes for "^(name_of (List.nth pdata choice)));
         ballot_boxes.(choice) <- ballot_boxes.(choice) + weight_of pdatum
     ) ballots pdata;
     let votes = Array.to_list ballot_boxes in

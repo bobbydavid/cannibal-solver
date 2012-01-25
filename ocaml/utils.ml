@@ -21,7 +21,7 @@ let find_nth_bit n k =
 let print_matrix mat =
     let x_dim = Array2.dim1 mat in
     let y_dim = Array2.dim2 mat in
-    print_endline("<"^(string_of_int x_dim)^" x "^(string_of_int y_dim)^">");
+    print_endline("Matrix <"^(string_of_int x_dim)^" x "^(string_of_int y_dim)^">:");
     let print_cell x y = print_string ("\t" ^ (string_of_int mat.{x,y})) in
     let rec print_row x y =
         if y < y_dim then (
@@ -65,7 +65,6 @@ let find_max_set fn set =
     fst (List.fold_left (do_find_max_set fn) ([], 0) set)
 
 let rec list_of_array1 arr =
-    print_endline((string_of_int(Array1.dim arr)));
     match (Array1.dim arr) with
     | 0 -> []
     | n -> arr.{0} :: list_of_array1 (Array1.sub arr 1 (n-1))
