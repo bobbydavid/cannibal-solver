@@ -69,11 +69,6 @@ let rec analyze_block_columns players blocks outcomes scenario ancestors =
             let old_block = blocks.(scenario) in
             let new_scenario = scenario lor (1 lsl ancestor) in
             let new_block = blocks.(new_scenario) in
-            (* print_endline("Analyze column for ancestor " ^
-                (string_of_int ancestor) ^
-                " of scenario " ^
-                (Utils.string_of_comb cnt scenario)
-            ); *)
             calc_column scenario old_block old_victim new_block ancestor days;
             analyze_block_columns players blocks outcomes scenario tl
         )
@@ -84,9 +79,10 @@ let rec enumerate_possible_ancestors ancestors cnt scenario = match cnt with
     | n ->
         let n = n - 1 in
         let mask = 1 lsl n in
-        enumerate_possible_ancestors (
+        let new_ancestors =
             if mask land scenario = 0 then n :: ancestors else ancestors
-        ) n scenario
+        in
+        enumerate_possible_ancestors new_ancestors n scenario
 
 let analyze_block players blocks outcomes scenario =
     let cnt = Array.length players in
@@ -106,13 +102,11 @@ let rec calc_blocks players blocks outcomes mouths =
         (* print_endline("Analyzing blocks for " ^ (string_of_int cnt) ^ "-choose-" ^ (string_of_int mouths)); *)
         (* 2. Analyze each of the blocks *)
         let combins = Combin.get_all_combinations cnt mouths in
-        let _ = List.map (analyze_block players blocks outcomes) combins in
-        ()
+        List.iter (analyze_block players blocks outcomes) combins
     );
     (* 3. Update the outcomes for each block *)
     let combins = Combin.get_all_combinations cnt mouths in
-    let _ = List.map (update_outcomes players blocks outcomes) combins in
-    ()
+    List.iter (update_outcomes players blocks outcomes) combins
 
 let solve_outcomes players =
     let cnt = Array.length players in

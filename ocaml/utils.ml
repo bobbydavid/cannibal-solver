@@ -1,8 +1,11 @@
 open Bigarray
 
-let rec count_bits = function
-    | 0 -> 0
-    | x -> (x mod 2) + count_bits (x lsr 1)
+let count_bits x =
+    let rec do_count_bits sum = function
+        | 0 -> sum
+        | x -> do_count_bits (sum + (x land 1)) (x lsr 1)
+    in
+    do_count_bits 0 x
 
 let divide_round_up x y =
     x / y + (if x mod y = 0 then 0 else 1)
