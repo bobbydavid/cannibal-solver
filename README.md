@@ -106,7 +106,7 @@ more so he wins the vote. Goliath butchers David and survives for an
 additional 130 days.
 
 
-**Goldilocks gets it easy**
+**The Three Bears -- No Golidlocks**
 
 The three bears from the Goldilocks tale are stranded on the island.
 Papa weighs 350 pounds, Mama weighs 310 pounds, and Baby weighs 180
@@ -140,21 +140,35 @@ Joe has N voting choices. Each choice will result in N survivors left on
 the island. From our assumption, this means a unique solution exists as to
 the order people will be eaten. Therefore Joe will be able to calculate
 exactly how many days he will survive in the event that each inhabitant dies.
-Assuming that the voting system never offers a perverse incentive to vote
-against one's own top candidate [[1]], Joe and anyone observing Joe will be able
-to deterministically determine how he will vote.
+Thus Joe, and anyone observing Joe, will be able to determine his voting
+preferences.
 
-The same logic applies to every survivor in the set of N + 1 survivors,
-meaning that the election has a determinate outcome. These
-outcomes can be used to calculate the Smith set, which itself must exist
-and will be unique [[2]]. Thus, the N + 1 inhabitants also have a unique
-solution of whom they will eat next.
+At this point everyone knows everyone else's voting preferences. Without any
+assumptions about the voting process, this could lead to unstable voting
+scenarios. For instance, say Joe has two people he would most like to eat:
+Daisy and Patsy. Bill also wants to eat either Daisy or Patsy. However,
+what if it is in Bill's best interest to vote for the same person as Joe, but
+in Joe's best interest to vote for a different person than Bill? Since they
+each know that about each other, the situation devolves into an infinitely
+rescursive guessing game.
+
+To solve the problem, the voting system must not allow for these loops.
+Naive voting is the easiest system that follows this principle: players always
+vote for the person they would eat if they had unilateral control, which no
+regard to how others might vote. Since voters disregard each other's
+preferences, the system avoids any infinite loops. Other potential voting
+schemes exist, but the important property of a viable scheme is that
+the process must yield exactly one 'winner', even when considering that
+voting is effectively not secret.
+
+To sum up, our N + 1 survivors each have predictable personal preferences for
+each vote, and our voting method guarantees that knowing the personal
+preferences for each voter is enough to determine the outcome of the vote.
+Therefore we can determine the outcome of the election where N + 1 survivors
+are voting.
 
 Inductively, this means that any set of N inhabitants will have a unique
-solution.
-
-[1]: http://en.wikipedia.org/wiki/Independence_of_irrelevant_alternatives
-[2]: http://en.wikipedia.org/wiki/Smith_set
+solution to the Cannibal Problem.
 
 
 Input File Format
