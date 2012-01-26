@@ -43,14 +43,16 @@ let calc_column old_scenario old_block old_victim new_block ancestor days =
     (* print_endline("\t["^(Utils.string_of_comb 6 old_scenario)^" <- "^(Utils.string_of_comb 6 new_scenario)^"]");
     print_endline("\told_victim: "^(string_of_int old_victim)^"; new_victim: "^(string_of_int new_victim)^"; days: "^(string_of_int days)); *)
     let rec fill_in_column y =
-        let _ =
+        if y = 0 then
+            ()
+        else let _ =
             match compare y new_victim with
             | -1 -> new_block.{y, new_victim} <- old_block.{y, old_victim} + days
             |  0 -> new_block.{y, new_victim} <- 0
             |  1 -> new_block.{y, new_victim} <- old_block.{y - 1, old_victim} + days
             |  n -> failwith("Unexpected result from compare: " ^ (string_of_int n))
         in
-        if y > 0 then fill_in_column (y - 1) else ()
+        fill_in_column (y - 1)
     in
     fill_in_column (new_cnt - 1)
     (* Utils.print_matrix new_block *)
@@ -78,20 +80,19 @@ let rec analyze_block_columns players blocks outcomes scenario ancestors =
         )
     | [] -> ()
 
-let rec enumerate_possible_ancestors cnt scenario = match cnt with
-    | 0 -> []
+let rec enumerate_possible_ancestors ancestors cnt scenario = match cnt with
+    | 0 -> ancestors
     | n ->
         let n = n - 1 in
         let mask = 1 lsl n in
-        if mask land scenario = 0 then
-            n :: enumerate_possible_ancestors n scenario
-        else
-            enumerate_possible_ancestors n scenario
+        enumerate_possible_ancestors (
+            if mask land scenario = 0 then n :: ancestors else ancestors
+        ) n scenario
 
 let analyze_block players blocks outcomes scenario =
     let cnt = Array.length players in
     (* print_endline("Begin block " ^ (Utils.string_of_comb cnt scenario) ^ ":"); *)
-    let ancestors = enumerate_possible_ancestors cnt scenario in
+    let ancestors = enumerate_possible_ancestors [] cnt scenario in
     (* print_endline("\tThis block has "^(string_of_int(List.length ancestors))^" possible ancestors"); *)
     analyze_block_columns players blocks outcomes scenario ancestors
 
