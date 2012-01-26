@@ -50,20 +50,12 @@ let resolve_winner pref pdata =
         failwith("Tiebreaking failed because multiple people had the name: "^(name_of pdatum))
 
 let make_up_your_mind pdata block_slice pdatum =
-    let remap_index (_,w,n) ix = (ix,w,n) in
-    let rec remap_indexes pdata ix = match pdata with
+    let rec remap_indexes ix = function
         | [] -> []
-        | hd :: tl -> remap_index hd ix :: remap_indexes tl (ix+1)
+        | (_,w,n) :: tl -> (ix,w,n) :: remap_indexes (ix+1) tl
     in
-    let pdata = remap_indexes pdata 0 in
-    let block_list = Utils.list_of_array1 block_slice in
-    let zipped_list = List.combine block_list pdata in
-    (* print_endline(
-        (name_of pdatum) ^
-        " deciding based on days to live: " ^
-        (List.fold_left (fun s i -> s^" "^(string_of_int i)) "" block_list)
-    ); *)
-    let (_, pdata_subset) = List.split (Utils.find_max_set fst zipped_list) in
+    let pdata = remap_indexes 0 pdata in
+    let pdata_subset = Utils.find_max_set (fun p -> block_slice.{ix_of p}) pdata in
     resolve_winner Heavier pdata_subset
 
 (*
