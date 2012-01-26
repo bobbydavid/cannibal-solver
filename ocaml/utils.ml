@@ -64,9 +64,11 @@ let find_max_set fn set =
     in
     fst (List.fold_left (do_find_max_set fn) ([], 0) set)
 
+(*
 let rec list_of_array1 arr =
     match (Array1.dim arr) with
     | 0 -> []
     | n -> arr.{0} :: list_of_array1 (Array1.sub arr 1 (n-1))
+*)
 
 

@@ -72,7 +72,8 @@ let naive_vote players block scenario =
         let dim = Array2.dim1 block in
         List.rev_map (fun x -> Array2.slice_left block x) (Utils.ints_below_n dim)
     in
-    let ballots = List.map2 (make_up_your_mind pdata) sliced_block pdata in
+    let rev_ballots = List.rev_map2 (make_up_your_mind pdata) sliced_block pdata in
+    let ballots = List.rev rev_ballots in
     let ballot_boxes = Array.make (List.length pdata) 0 in
     List.iter2 (fun choice pdatum ->
         (* print_endline((name_of pdatum)^" votes for "^(name_of (List.nth pdata choice))); *)

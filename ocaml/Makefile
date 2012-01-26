@@ -10,7 +10,7 @@ debug:
 	ocamlbuild -cflag -g -lflag -g -lib bigarray main.byte
 
 fast:
-	ocamlbuild -cflag -g -lib bigarray main.native
+	ocamlbuild -cflags -g -lib bigarray main.native
 
 bear: debug
 	ocamlrun -b ./main.byte < ../scenarios/threeBears.inp

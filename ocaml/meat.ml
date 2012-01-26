@@ -105,6 +105,7 @@ let rec calc_blocks players blocks outcomes mouths =
         calc_blocks players blocks outcomes mouths;
         (* print_endline("Analyzing blocks for " ^ (string_of_int cnt) ^ "-choose-" ^ (string_of_int mouths)); *)
         (* 2. Analyze each of the blocks *)
+        print_endline("Analyzing blocks of size "^(string_of_int mouths)^"...");
         let combins = Combin.get_all_combinations cnt mouths in
         let _ = List.map (analyze_block players blocks outcomes) combins in
         ()
@@ -116,7 +117,9 @@ let rec calc_blocks players blocks outcomes mouths =
 
 let solve_outcomes players =
     let cnt = Array.length players in
+    print_endline "Begin initializing empty blocks...";
     let blocks = initialize_empty_blocks cnt in
+    print_endline "Done initializing empty blocks";
     let num_scenarios = 1 lsl cnt in
     let outcomes = Array.make num_scenarios (-1) in
     let _ = calc_blocks players blocks outcomes cnt in
