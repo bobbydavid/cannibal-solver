@@ -3,7 +3,6 @@ open Bigarray
 let initialize_empty_blocks cnt =
     let blocks = Array.make (1 lsl cnt) 0 in
     let gen_block k _ =
-        if (k mod 10000 = 0) then print_endline((string_of_int k)^" blocks...") else ();
         let bits = Utils.count_bits k in
         let matrix = Array2.create int c_layout bits bits in
         Array2.fill matrix 0;
