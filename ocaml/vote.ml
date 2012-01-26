@@ -50,11 +50,11 @@ let resolve_winner pref pdata =
         failwith("Tiebreaking failed because multiple people had the name: "^(name_of pdatum))
 
 let make_up_your_mind pdata block_slice pdatum =
-    let rec remap_indexes ix = function
+    let rec remap_indexes ix pdata_new = function
         | [] -> []
-        | (_,w,n) :: tl -> (ix,w,n) :: remap_indexes (ix+1) tl
+        | (_,w,n) :: tl -> remap_indexes (ix+1) ((ix,w,n) :: pdata_new) tl
     in
-    let pdata = remap_indexes 0 pdata in
+    let pdata = remap_indexes 0 [] pdata in
     let pdata_subset = Utils.find_max_set (fun p -> block_slice.{ix_of p}) pdata in
     resolve_winner Heavier pdata_subset
 
