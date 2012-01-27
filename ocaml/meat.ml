@@ -34,11 +34,7 @@ let initialize_empty_blocks cnt =
 let calc_column old_scenario old_block old_victim new_block ancestor days =
     let new_scenario = old_scenario lor (1 lsl ancestor) in
     let new_victim = Utils.count_bits(new_scenario land ((1 lsl ancestor)-1)) in
-    (* print_endline("\tIf player " ^ (string_of_int ancestor) ^ " just died...");
-    Utils.print_matrix old_block; *)
     let new_cnt = Utils.count_bits new_scenario in
-    (* print_endline("\t["^(Utils.string_of_comb 6 old_scenario)^" <- "^(Utils.string_of_comb 6 new_scenario)^"]");
-    print_endline("\told_victim: "^(string_of_int old_victim)^"; new_victim: "^(string_of_int new_victim)^"; days: "^(string_of_int days)); *)
     let rec fill_in_column y =
         if y = 0 then
             ()
@@ -52,7 +48,6 @@ let calc_column old_scenario old_block old_victim new_block ancestor days =
         fill_in_column (y - 1)
     in
     fill_in_column (new_cnt - 1)
-    (* Utils.print_matrix new_block *)
 
 
 
@@ -82,56 +77,20 @@ let rec analyze_block_columns players blocks outcomes scenario ancestors =
         )
     | [] -> ()
 
-(*
-let analyze_all_blocks players blocks outcomes n last_k =
-    let k = Combin.succ_combination n last_k in
-    let cnt = Array.length players in
-    let possible_ancestors = enumerate_possible_ancestors [] cnt k in
-    analyze_block_columns players blocks outcomes k possible_ancestors;
-    analyze_all_blocks players blocks outcomes n k
-*)
-
-
-
-let rec calc_blocks players blocks outcomes prev_k =
+let calc_blocks players blocks outcomes =
     let cnt = Array.length players in
     try
-        let k = Combin.succ_combination cnt prev_k in
-        outcomes.(k) <- Vote.naive_vote players blocks.(k) k;
-        let possible_ancestors = enumerate_possible_ancestors [] cnt k in
-        analyze_block_columns players blocks outcomes k possible_ancestors;
-        calc_blocks players blocks outcomes k
+        let rec examine_scenarios prev_k =
+            let k = Combin.succ_combination cnt prev_k in
+            outcomes.(k) <- Vote.naive_vote players blocks.(k) k;
+            let possible_ancestors = enumerate_possible_ancestors [] cnt k in
+            analyze_block_columns players blocks outcomes k possible_ancestors;
+            examine_scenarios k
+        in
+        examine_scenarios 0
     with Combin.FinalSuccessor ->
         let final_k = (1 lsl cnt) - 1 in
         outcomes.(final_k) <- Vote.naive_vote players blocks.(final_k) final_k
-
-(*
-    if mouths = 1 then
-        ()
-    else (
-        (* 1. Recursively do smaller blocks *)
-        let mouths = mouths - 1 in
-        calc_blocks players blocks outcomes mouths;
-        (* print_endline("Analyzing blocks for " ^ (string_of_int cnt) ^ "-choose-" ^ (string_of_int mouths)); *)
-        (* 2. Analyze each of the blocks *)
-        try
-            analyze_all_blocks players blocks outcomes mouths 0
-        with Combin.FinalSuccessor -> ()
-        (*
-        let combins = Combin.get_all_combinations cnt mouths in
-        List.iter (analyze_block players blocks outcomes) combins
-        *)
-    );
-    (* 3. Update the outcomes for each block *)
-    try
-        let rec do_updates last_k =
-            let k = Combin.succ_combination mouths last_k in
-            outcomes.(k) <- Vote.naive_vote players blocks.(k) k;
-            do_updates k
-        in
-        do_updates 0
-    with Combin.FinalSuccessor -> ()
-*)
 
 let solve_outcomes players =
     let cnt = Array.length players in
