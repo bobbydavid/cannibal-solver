@@ -136,6 +136,7 @@ let rec calc_blocks players blocks outcomes prev_k =
 let solve_outcomes players =
     let cnt = Array.length players in
     let blocks = initialize_empty_blocks cnt in
+    Debug.print((string_of_int(Array.length blocks))^" blocks initialized");
     let num_scenarios = 1 lsl cnt in
     let outcomes = Array.make num_scenarios (-1) in
     let _ = calc_blocks players blocks outcomes 0 in

@@ -10,6 +10,11 @@
 
 let show_verbose = ref false
 
+let print s =
+    if !show_verbose then
+        print_endline s
+    else
+        ()
 
 let block_freq = ref 0x7FFF
 let print_block_num k =
