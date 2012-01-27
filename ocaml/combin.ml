@@ -51,14 +51,15 @@ let slide_lsb_down x additional_ones =
 
 
 
-
 let rec succ_combination n x accu =
     (* print_endline("n: "^(string_of_int n)^"; x: "^(string_of_int x)^"; accu: "^(string_of_int accu)); *)
     if x = 0 then (
         if n = 0 then
             raise FinalSuccessor
-        else
+        else (
+            Debug.print_biggest_combination n accu;
             ((1 lsl (accu+1)) - 1) lsl (n - 1)
+        )
     ) else if (x land 1 = 0) then
         slide_lsb_down x accu
     else

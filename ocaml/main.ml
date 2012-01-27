@@ -7,6 +7,7 @@ let print_usage () =
     print_newline ();
     print_endline  "  Flags:";
     print_endline  "    -h\tThis help information";
+    print_endline  "    -v\tVerbose printing while calculating";
     print_endline  "    ??\tFlags are not fully implemented yet :("
 
 (* Given a filename, return the tuples that represent the players *)
@@ -49,7 +50,7 @@ let rec handle_args = function
         | "-h"
         | "-help"
         | "--help" -> print_usage (); exit 0
-        | "-v" -> print_endline "Verbose mode doesn't yet exist"
+        | "-v" -> Debug.show_verbose := true
         | s -> failwith("Unknown parameter: "^s)
     );
     handle_args tl

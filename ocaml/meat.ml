@@ -81,14 +81,30 @@ let rec analyze_block_columns players blocks outcomes scenario ancestors =
         )
     | [] -> ()
 
-let rec analyze_all_blocks players blocks outcomes n last_k =
+(*
+let analyze_all_blocks players blocks outcomes n last_k =
     let k = Combin.succ_combination n last_k in
     let cnt = Array.length players in
     let possible_ancestors = enumerate_possible_ancestors [] cnt k in
     analyze_block_columns players blocks outcomes k possible_ancestors;
     analyze_all_blocks players blocks outcomes n k
+*)
 
-let rec calc_blocks players blocks outcomes mouths =
+
+
+let rec calc_blocks players blocks outcomes prev_k =
+    let cnt = Array.length players in
+    try
+        let k = Combin.succ_combination cnt prev_k in
+        outcomes.(k) <- Vote.naive_vote players blocks.(k) k;
+        let possible_ancestors = enumerate_possible_ancestors [] cnt k in
+        analyze_block_columns players blocks outcomes k possible_ancestors;
+        calc_blocks players blocks outcomes k
+    with Combin.FinalSuccessor ->
+        let final_k = (1 lsl cnt) - 1 in
+        outcomes.(final_k) <- Vote.naive_vote players blocks.(final_k) final_k
+
+(*
     if mouths = 1 then
         ()
     else (
@@ -114,13 +130,14 @@ let rec calc_blocks players blocks outcomes mouths =
         in
         do_updates 0
     with Combin.FinalSuccessor -> ()
+*)
 
 let solve_outcomes players =
     let cnt = Array.length players in
     let blocks = initialize_empty_blocks cnt in
     let num_scenarios = 1 lsl cnt in
     let outcomes = Array.make num_scenarios (-1) in
-    let _ = calc_blocks players blocks outcomes cnt in
+    let _ = calc_blocks players blocks outcomes 0 in
     (* Array.iter Utils.print_matrix blocks; *)
     outcomes
 
