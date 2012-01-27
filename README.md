@@ -46,7 +46,7 @@ There are cases where it would be beneficial to vote for someone other than
 one's ideal candidate. Naive voting ignores any such scenarios.
 
 
-#### Candorcet Voting
+#### Condorcet Voting
 
 The residents will
 conduct run-off elections between every candidate and determine the
