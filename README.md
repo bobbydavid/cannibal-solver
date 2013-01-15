@@ -21,7 +21,7 @@ and butchered, that inhabitant yields one meal for every pound they weigh.
 So how does the group decide the next victim? By voting! Every resident
 of the island votes for who they'd most like to eat, and majority rules
 (remember, that's majority determined by weight, not by votes). If there
-is no clear majority, than things get complicated (see the voting section,
+is no clear majority, then things get complicated (see the voting section,
 below).
 
 To solve the cannibal problem, you must determine the order in which
